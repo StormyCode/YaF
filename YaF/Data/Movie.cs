@@ -21,11 +21,13 @@ namespace Data
         public double Size { get { return this.Directory.GetFiles("*", SearchOption.AllDirectories).Sum(x => x.Length); } }
         public string Id { get { return Regex.Replace(this.Name, @"[^A-z0-9]", "").ToLower(); } }
         public Dictionary<string, string> Nfo { get; private set; }
+        public FileInfo MovieFile { get { return this.Directory.GetFiles("*.mkv, *.avi, *.mp4", SearchOption.TopDirectoryOnly).FirstOrDefault(); } }
+        public bool HasIco { get { return this.Directory.GetFiles(string.Format("{0}.ico", this.MovieFile.Name), SearchOption.TopDirectoryOnly).Length > 0; } }
 
         public void ReadNfoFiles()
         {
             this.Nfo = new Dictionary<string, string>();
-            foreach (FileInfo fi in this.Directory.GetFiles("*.nfo", SearchOption.TopDirectoryOnly))
+            foreach (FileInfo fi in this.Directory.GetFiles(string.Format("{0}.nfo", this.MovieFile.Name), SearchOption.TopDirectoryOnly))
             {
                 using (StreamReader sr = new StreamReader(fi.OpenRead()))
                 {
