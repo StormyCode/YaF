@@ -19,7 +19,7 @@ namespace Data
         private DirectoryInfo Directory { get; set; }
         public string Name { get { return this.Directory.Name; } }
         public double Size { get { return this.Directory.GetFiles("*", SearchOption.AllDirectories).Sum(x => x.Length); } }
-        public string Id { get { return Regex.Replace(this.Name, @"[^A-z0-9]", ""); } }
+        public string Id { get { return Regex.Replace(this.Name, @"[^A-z0-9]", "").ToLower(); } }
         public Dictionary<string, string> Nfo { get; private set; }
 
         public void ReadNfoFiles()
