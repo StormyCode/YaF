@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Data
 {
-    class Movie
+    public class Movie
     {
         public Movie(string directoryPath)
         {
