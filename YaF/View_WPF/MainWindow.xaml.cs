@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Controller;
 namespace View_WPF
 {
     /// <summary>
@@ -23,6 +23,9 @@ namespace View_WPF
         public MainWindow()
         {
             InitializeComponent();
+            //2016-01-19 TEST
+            //MediaLibrary mlib = new MediaLibrary();
+            //mlib.AddMovies("");
         }
     }
 }
