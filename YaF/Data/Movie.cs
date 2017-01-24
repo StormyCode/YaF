@@ -24,6 +24,7 @@ namespace Data
         public double Size { get { return this.Directory.GetFiles("*", SearchOption.AllDirectories).Sum(x => x.Length); } }
         public string Id { get { return Regex.Replace(this.Name, @"[^A-z0-9]", "").ToLower(); } }
         public Dictionary<string, string> Nfo { get; private set; }
+        private string[] ValidExtensions { get; set; } = new string[] { ".avi", ".mkv", "mp4" };
         public FileInfo MovieFile
         {
             get
@@ -31,15 +32,50 @@ namespace Data
                 try
                 {
                     this.Directory.GetAccessControl();
-                    return this.Directory.GetFiles("*.mkv", SearchOption.AllDirectories).FirstOrDefault();
+                    var files = this.Directory.GetFiles("*", SearchOption.AllDirectories).ToList<FileInfo>();
+                    return files.Where(x => this.ValidExtensions.Contains(x.Extension) && x.Name.ToLower().Contains("sample") == false).FirstOrDefault();
                 }
                 catch (Exception)
                 {
                     return null;
+
                 }
             }
         }
-        public bool HasIco { get { return this.Directory.GetFiles(string.Format("{0}.ico", Path.GetFileNameWithoutExtension(this.MovieFile.Name)), SearchOption.TopDirectoryOnly).Length > 0; } }
+        public TimeSpan Duration
+        {
+            get
+            {
+                if (this.MovieFile != null)
+                {
+                    if (this.MovieFile.Extension == ".mp4")
+                    {
+                        List<string> arrHeaders = new List<string>();
+                        Shell32.Shell shell = new Shell32.Shell();
+                        Shell32.Folder objFolder;
+                        objFolder = shell.NameSpace(this.MovieFile.FullName);
+
+                        for (int i = 0; i < short.MaxValue; i++)
+                        {
+                            string header = objFolder.GetDetailsOf(null, i);
+                            if (String.IsNullOrEmpty(header))
+                                break;
+                            arrHeaders.Add(header);
+                        }
+
+                        foreach (Shell32.FolderItem2 item in objFolder.Items())
+                        {
+                            for (int i = 0; i < arrHeaders.Count; i++)
+                            {
+                                Console.WriteLine("{0}\t{1}: {2}", i, arrHeaders[i], objFolder.GetDetailsOf(item, i));
+                            }
+                        }
+                    }
+                }
+                return new TimeSpan();
+            }
+
+        }
 
         public void ReadNfoFiles()
         {
@@ -70,5 +106,6 @@ namespace Data
                 }
             }
         }
+
     }
 }

@@ -24,8 +24,11 @@ namespace View_WPF
         {
             InitializeComponent();
             //2016-01-19 TEST
-            //MediaLibrary mlib = new MediaLibrary();
-            //mlib.AddMovies("");
+            MediaLibrary mlib = new MediaLibrary();
+            mlib.AddMovies(@"J:\Filme");
+            var avis = mlib.Movies.Where(x => x.MovieFile != null && x.MovieFile.Extension == ".mp4").ToList();
+            Console.WriteLine(avis[0].Duration);
+            this.Close();
         }
     }
 }
